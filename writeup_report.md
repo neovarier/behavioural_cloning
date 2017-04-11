@@ -160,7 +160,8 @@ The model had mostly learned for going straight and had not learned for taking t
 
 ![alt text][image3]
 
-To increase the dataset I employed data augmentation.
+
+To increase the dataset I employed data augmentation. I should thank this [blog post] (https://medium.com/@subodh.malgonde/teaching-a-car-to-mimic-your-driving-behaviour-c1f0ae543686) for suggestions about data augmentation.
 For taking turns in the track 1, the approximate steering angle required was around +/-0.2 for which the dataset was less.
 For data augmentation I used generator function feature of model.fit_generator which would generate the augmented dataset
 on the fly. If we generate the augmented images separately and store, the image array size would be huge and python would run out of memory.
@@ -209,6 +210,12 @@ Following is the plot for loss:
 
 The total training data set count is 83757 including left,right and center images.
 Considering this as the total count I used 83757x0.8 ~ 67000 for training and 83757x0.2 ~ 16751.
+
+Epochs 5
+Training set 67000
+Validation set 16751
+Optimizer Adam
+
 Although the augmented data set would contain flipped images and brightness adjusted images too.
 Adding data set of track 2 to the base data set and augmenting on the fly helped the model to learn the difficult features associated with track 2. It covered the track 2 to a good extent but crashed later
 
