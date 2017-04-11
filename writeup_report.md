@@ -166,10 +166,10 @@ For taking turns in the track 1, the approximate steering angle required was aro
 For data augmentation I used generator function feature of model.fit_generator which would generate the augmented dataset
 on the fly. If we generate the augmented images separately and store, the image array size would be huge and python would run out of memory.
 
-1)I used the left and right camera images and simulated the instances of taking right and left turn respectively by adding a correction factor of 0.25 to the steering angle.
-2)In a single iteration I randomly selected one image -center, left or right. This would generate a data set with even distribution of various steering angles.
-3)To even out the data set for left and right turns, I randomly flipped an image and multiplied (-1) to the corresponding steering angle.
-4)To simulate different lighting conditions, I changed the brightness of the images by randomly choosing a brightness multiplication factor.
+1. I used the left and right camera images and simulated the instances of taking right and left turn respectively by adding a correction factor of 0.25 to the steering angle.
+2. In a single iteration I randomly selected one image -center, left or right. This would generate a data set with even distribution of various steering angles.
+3. To even out the data set for left and right turns, I randomly flipped an image and multiplied (-1) to the corresponding steering angle.
+4. To simulate different lighting conditions, I changed the brightness of the images by randomly choosing a brightness multiplication factor.
 
 The following are center, left and right images:
 
