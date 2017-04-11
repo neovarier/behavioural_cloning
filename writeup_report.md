@@ -1,4 +1,5 @@
-Behavioral Cloning Project
+#**Behavioral Cloning Project**
+
 [//]: # (Image References)
 
 [image1]: ./images/no_dropouts.png "Loss without Dropouts"
@@ -45,6 +46,7 @@ driving_log.csv csv file for dataset used
 Using drive.py the car can be driven autonomously around the track by executing
 
 python drive.py model.h5
+
 ####3. Submission code is usable and readable
 
 The model.py file contains the code for training and saving the convolution neural network. 
