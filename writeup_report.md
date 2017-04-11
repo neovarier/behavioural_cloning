@@ -11,8 +11,8 @@
 [image7]: ./images/right.jpg "Right Image"
 [image8]: ./images/flip.jpg "Flipped Image"
 [image9]: ./images/brightness.jpg "Brightness adjusted Image"
-[imag10]: ./images/model.png "Nvidia Model"
-[imag11]: ./images/loss.png "Loss"
+[image10]: ./images/model.png "Nvidia Model"
+[image11]: ./images/loss.png "Loss"
 
 The goals / steps of this project are the following:
 
@@ -58,6 +58,7 @@ The file shows the pipeline I used for training and validating the model, and it
 
 I have used Nvidia end-to-end network given in the paper (line no. 103-113):
 https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
+
 The model uses 5 convolutional layer followed by 3 fully connected layers.
 The last fully connected layer is connected to a single neoron for predicting the steering angle.
 Activation function of ReLu is used between each Neural Network layer.
@@ -76,8 +77,13 @@ I am plotting the training and validation loss using the history feature of the 
 Initial training, resulted in the validation loss increasing when the training loss was continuously decreasing.
 This is a clear case of overfitting. The network is not able to generalize.
 The following graph depicts it:
+Without Dropouts:
 
-![alt text][image1] ![alt text][image2]
+![alt text][image1] 
+
+After applying dropouts:
+
+![alt text][image2]
 
 Therefore I used dropout layers in the fully connected layers with a dropout probability of 0.5. (line no. 112-117)
 The model was trained and validated on different data sets to ensure that the model was not overfitting. 
