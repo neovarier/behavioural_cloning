@@ -1,10 +1,17 @@
-#Behavioral Cloning
-
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
 Behavioral Cloning Project
+[//]: # (Image References)
+
+[image1]: ./images/no_dropouts.png "Loss without Dropouts"
+[image2]: ./images/dropouts.png "Loss after Dropouts"
+[image3]: ./images/hist.png "Histogram of baseline dataset"
+[image4]: ./images/hist_added_data.png "Histogram with added dataset"
+[image5]: ./images/center.jpg "Center Image"
+[image6]: ./images/left.jpg "Left Image"
+[image7]: ./images/right.jpg "Right Image"
+[image8]: ./images/flip.jpg "Flipped Image"
+[image9]: ./images/brightness.jpg "Brightness adjusted Image"
+[imag10]: ./images/model.png "Nvidia Model"
+[imag11]: ./images/loss.png "Loss"
 
 The goals / steps of this project are the following:
 
@@ -28,8 +35,11 @@ model.py containing the script to create and train the model
 drive.py for driving the car in autonomous mode
 model.h5 containing a trained convolution neural network
 writeup_report.md or writeup_report.pdf summarizing the results
-video.mp4 recorded video of autonomous driving on track 1
+video_track1.mp4 recorded video of autonomous driving on track 1
 video_track2.mp4 recorded video of autonomous driving on track 2
+run_track1.mp4 center camera recorded video of autonomous on track 1
+run_track1.mp4 center camera recorded video of autonomous on track 2
+driving_log.csv csv file for dataset used
 
 ####2. Submission includes functional code Using the Udacity provided simulator and my model.py file for training the model. 
 Using drive.py the car can be driven autonomously around the track by executing
@@ -44,8 +54,10 @@ The file shows the pipeline I used for training and validating the model, and it
 
 ####1. An appropriate model architecture has been employed
 
-I have used Nvidia end-to-end network given in the paper
-The model uses 5 convolutional layer followed by 4 fully connected layers.
+I have used Nvidia end-to-end network given in the paper (line no. 103-113):
+https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
+The model uses 5 convolutional layer followed by 3 fully connected layers.
+The last fully connected layer is connected to a single neoron for predicting the steering angle.
 Activation function of ReLu is used between each Neural Network layer.
 Before Convolutional layers, I have used two layers using Keras:
 1. layer of normalization
@@ -57,20 +69,21 @@ The figures shows the layers of the model.
 The data set is spit as follows:
 training dataset = 0.8 
 validation dataset = 0.2
-I am using the splitting feature of model.fit_generator.
+I am using the splitting feature of model.fit_generator.(line no. 128)
 I am plotting the training and validation loss using the history feature of the model.fit_generator.
 Initial training, resulted in the validation loss increasing when the training loss was continuously decreasing.
 This is a clear case of overfitting. The network is not able to generalize.
 The following graph depicts it:
-Therefore I used dropout layers in the fully connected layers with a dropout probability of 0.5.
 
+![alt text][image1] ![alt text][image2]
 
+Therefore I used dropout layers in the fully connected layers with a dropout probability of 0.5. (line no. 112-117)
 The model was trained and validated on different data sets to ensure that the model was not overfitting. 
 The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
 ####3. Model parameter tuning
 
-The model used an adam optimizer, so the learning rate was not tuned manually.
+The model used an adam optimizer, so the learning rate was not tuned manually.(line no. 124)
 
 ####4. Appropriate training data
 
@@ -92,12 +105,39 @@ The strategy was to generate enough dataset which simulate the scenarios that th
 4. Different lighting conditions
 
 I used Nvidia End-to-End neural network as it is proven to work on On-Road tests.
+https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
+
+![alt text][image10]
+
+| Layer         		    |     Description	        					                       | 
+|:---------------------:|:--------------------------------------------------------:| 
+| Input         		    | 160x320x3 RGB image   							                     |
+| Normalization         |                                                          |
+| Cropping              |                                                          |
+| Convolution 5x5     	| 24 kernels  	                                           |
+| RELU					 				|                                                          |
+| Convolution 5x5      	| 36 kernels                                				       |
+| RELU					 				|                                                          |
+| Convolution 5x5      	| 48 kernels                                				       |
+| RELU					 				|                                                          |
+| Convolution 5x5      	| 64 kernels                                				       |
+| RELU					 				|                                                          |
+| Convolution 5x5      	| 64 kernels                                				       |
+| RELU					 				|                                                          |
+| Fully connected		100 |                   									                     |
+| RELU					 				|                                                          |
+| Fully connected		50  |                 									                       |
+| RELU					 				|                                                          |
+| Fully connected		10  |                 									                       |
+| RELU  				        |             									                           |
+| Fully connected		1   |                 									                       |
 
 First I tried training the network with the data of track1 provided in the project using a model generator 
 The generator function was initially  simply reads images and uses them as they were for training.
-The model includes normalization and cropping layers before convolution layers. 
+The model includes normalization and cropping layers before convolution layers.
+RGB images are given as input to the network for training.
 The splitting feature of the model.fit_generator was used to split the data set.
-The plotting of training and validation loss was done using the history feature of the model.fit_generator.
+The plotting of training and validation loss was done using the history feature of the model.fit_generator (line no. 128-140).
 It was observed that the validation loss was increasing when the training loss was continuously decreasing.
 This is a case of overfitting. The model is not able to generalize.
 I employed the dropout layers for fully connected layers.
@@ -108,8 +148,10 @@ going into the muddy road.
 
 ####2. Creation of the Training Set & Training Process
 
-I plotted a histogram of the steering angles. The plot shows that the instances of steering angles is very high as compared to other.
-The model had not learned for going straight as there was less data set corresponding to taking turns.
+I plotted a histogram of the steering angles. The plot shows that the instances of 0 steering angles is very high as compared to other.
+The model had mostly learned for going straight and had not learned for taking turns as there was less data set corresponding to taking turns.
+
+![alt text][image3]
 
 To increase the dataset I employed data augmentation.
 For taking turns in the track 1, the approximate steering angle required was around +/-0.2 for which the dataset was less.
@@ -121,7 +163,19 @@ on the fly. If we generate the augmented images separately and store, the image 
 3)To even out the data set for left and right turns, I randomly flipped an image and multiplied (-1) to the corresponding steering angle.
 4)To simulate different lighting conditions, I changed the brightness of the images by randonly choosing a factor.
 
-With the model was doing better with the turns. But it was turning very closely for the last right turn in the track 1.
+The following are center, left and right images:
+
+![alt text][image5] ![alt text][image6] ![alt text][image7]
+
+The following show flipping of images:
+
+![alt text][image5] ![alt text][image8]
+
+The following show flipping of images:
+
+![alt text][image5] ![alt text][image9]
+
+With this model was doing better with the turns. But it was turning very closely for the last right turn in the track 1.
 It was observed that the track 1 has 3 left turns and 1 right turn.
 It seemed that even with randomly picking left,right or images and randomly flipping was not generating enough dataset
 for right turns and the base dataset itself is biased towards left turns.
@@ -136,14 +190,25 @@ I tried the model on track 2. It did not give very good results.
 4)There are many patches of road where there are very dark shadows.
 The track 1 training data did not train the model for such scenarios.
 
-I collected more data by driving the simulator on track 2.
-Adding data set of track 2 to the base data set helped the model to learn the difficult features associated with track 2.
-It covered the track 2 to a good extent.
+I collected more data by driving the simulator on track 2. The histogram plot for the new data set:
+
+![alt text][image4]
+
+The data set includes a lot more left and right turns.
+Following is the plot for loss:
+
+![alt text][image11]
+
+The total training data set count is 83757 including left,right and center images.
+Considering this as the total count I used 83757x0.8 ~ 67000 for training and 83757x0.2 ~ 16751.
+Although the augmented data set would contain flipped images and brightness adjusted images too.
+Adding data set of track 2 to the base data set and augmenting on the fly helped the model to learn the difficult features associated with track 2. It covered the track 2 to a good extent but crashed later
 
 Another point that I observed that with adding the track 2 data set, the driving on track 1 had also improved for the turns.
 Earlier where the car would close to the lanes while taking turns. In this case, the cars were quite centered even while taking turns.
 This should be because it is trained with more data set of left and right turns.
 
 ####3. Reflections
-Many more techniques for data augmentation to the base data set can be employed like rotation, translation, artificial shadowing, etc.
-This would reduce the amount of manual driving that is needed for collecting data set.
+* Many more techniques for data augmentation to the base data set can be employed like rotation, translation, artificial shadowing, etc.
+* More data set can also be generated for track 2 by recording the recovery from left to right lane.
+* Keras simplifies coding. With very few lines of code one can model a complex neural network architecture
